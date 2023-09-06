@@ -18,6 +18,9 @@ player1_f, player2_f, cpu_f = False, False, False
 turn_array = ['Heads', 'Tails']
 coin_flip = random.randint(0, 1)
 player1_symbol, player2_symbol, cpu_symbol = 'p1', 'p2', 'c'
+fill_count = 0
+player_connects, cpu_connects = 0, 0
+game_over = False
 
 # ( Functions )
 def display_board():
@@ -48,54 +51,253 @@ def re_roll(a, b):
         re_roll(a, temp_b)
 
 def board_check(a_symbol, b_symbol):
-
-    # ( vertical )
     for i in range(6):
-        a_count = 0
-        b_count = 0
-        for j in range(5):
-            if a_count == 4 or b_count == 4:
-                print('\nConnect 4 !!!!\n')
-                break
+        for j in range(7):
+            # Is space occupied
             if board[i][j] == 1:
-                if string_board[i][j] == a_symbol:
-                    a_count += 1
-                    if i <= 2:
-                        if string_board[i][j+1] == a_symbol or string_board[i+1][j] == a_symbol:
-                            a_count += 1
-                        else:
-                            a_count = 1
-                    if i > 2:
-                        if string_board[i][j-1] == a_symbol or string_board[i-1][j] == a_symbol:
-                            a_count += 1
-                        else:
-                            a_count = 1
-                if string_board[i][j] == b_symbol:
-                    b_count += 1
-                    if i <= 2:
-                        if string_board[i][j+1] == b_symbol or string_board[i+1][j] == b_symbol:
-                            b_count += 1
-                        else:
-                            b_count = 1
-                    if i > 2:
-                        if string_board[i][j-1] == b_symbol or string_board[i-1][j] == b_symbol:
-                            b_count += 1
-                        else:
-                            b_count = 1
-
-
-    # ( horizontal )
-    # for i in range(len(board)):
-    #     for j in range(0, 6):
-    #         if string_board[i][j] == a_symbol and string_board[i][j+1] == a_symbol and string_board[i][j+2] == a_symbol and string_board[i][j+3] == a_symbol:
-    #             a_count += 4
-    #             print('\nConnect 4 !!!\n')
-    #         elif string_board[i][j] == b_symbol and string_board[i][j+1] == b_symbol and string_board[i][j+2] == b_symbol and string_board[i][j+3] == b_symbol:
-    #             b_count += 4
-    #             print('\nConnect 4 !!!\n')
-
-    # ( diagonal )
-
+                # ( middle conditions )
+                if i == 3 and j == 3:
+                    # ( check diagonals )
+                    if string_board[i-1][j+1] == a_symbol and string_board[i-2][j+2] == a_symbol:
+                        if string_board[i-3][j+3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i-1][j+1] == b_symbol and string_board[i-2][j+2] == b_symbol:
+                        if string_board[i-3][j+3] == b_symbol:
+                            # cpu_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    if string_board[i-1][j-1] == a_symbol and string_board[i-2][j-2] == a_symbol:
+                        if string_board[i-3][j-3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i-1][j-1] == b_symbol and string_board[i-2][j-2] == b_symbol:
+                        if string_board[i-3][j-3] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( linear )
+                    if string_board[i][j+1] == a_symbol and string_board[i][j+2] == a_symbol:
+                        if string_board[i][j+3] == a_symbol:
+                            # player_connects += 3
+                            print('(Player): Connect 4 !!!!')
+                            return True
+                    if string_board[i][j-1] == a_symbol and string_board[i][j-2] == a_symbol:
+                        if string_board[i][j-3] == a_symbol:
+                            # player_connects += 3
+                            print('(Player): Connect 4 !!!!')
+                            return True
+                    if string_board[i][j+1] == b_symbol and string_board[i][j+2] == b_symbol:
+                        if string_board[i][j+3] == b_symbol:
+                            # cpu_connects += 3
+                            print('(CPU): Connect 4 !!!!')
+                            return True
+                    if string_board[i][j-1] == b_symbol and string_board[i][j-2] == b_symbol:
+                        if string_board[i][j-3] == b_symbol:
+                            # cpu_connects += 3
+                            print('(CPU): Connect 4 !!!!')
+                            return True
+                    # ( vert )
+                    if string_board[i-1][j] == a_symbol and string_board[i-2][j] == a_symbol:
+                        if string_board[i-3][j] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!! \n')
+                            return True
+                    if string_board[i-1][j] == b_symbol and string_board[i-2][j] == b_symbol:
+                        if string_board[i-3][j] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!! \n')
+                            return True
+                    # print('\n Middle Condition \n')
+                elif i == 2 and j == 3:
+                    # ( check diagonals )
+                    if string_board[i+1][j-1] == a_symbol and string_board[i+2][j-2] == a_symbol:
+                        if string_board[i+3][j-3] == a_symbol:
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i+1][j+1] == a_symbol and string_board[i+2][j+2] == a_symbol:
+                        if string_board[i+3][j+3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i + 1][j - 1] == b_symbol and string_board[i + 2][j - 2] == b_symbol:
+                        if string_board[i + 3][j - 3] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    if string_board[i + 1][j + 1] == b_symbol and string_board[i + 2][j + 2] == b_symbol:
+                        if string_board[i + 3][j + 3] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( linear )
+                    if string_board[i][j+1] == a_symbol and string_board[i][j+2] == a_symbol:
+                        if string_board[i][j+3] == a_symbol:
+                            # player_connects += 3
+                            print('(Player): Connect 4 !!!!')
+                            return True
+                    if string_board[i][j-1] == a_symbol and string_board[i][j-2] == a_symbol:
+                        if string_board[i][j-3] == a_symbol:
+                            # player_connects += 3
+                            print('(Player): Connect 4 !!!!')
+                            return True
+                    if string_board[i][j+1] == b_symbol and string_board[i][j+2] == b_symbol:
+                        if string_board[i][j+3] == b_symbol:
+                            # cpu_connects += 3
+                            print('(CPU): Connect 4 !!!!')
+                            return True
+                    if string_board[i][j-1] == b_symbol and string_board[i][j-2] == b_symbol:
+                        if string_board[i][j-3] == b_symbol:
+                            # cpu_connects += 3
+                            print('(CPU): Connect 4 !!!!')
+                            return True
+                    # ( vert )
+                    if string_board[i+1][j] == a_symbol and string_board[i+2][j] == a_symbol:
+                        if string_board[i+3][j] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!! \n')
+                            return True
+                    if string_board[i+1][j] == b_symbol and string_board[i+2][j] == b_symbol:
+                        if string_board[i+3][j] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!! \n')
+                            return True
+                    # print('\n Middle Condition \n')
+                # ( edge conditions )
+                if i >= 3 > j:
+                    # ( check diagonals )
+                    if string_board[i - 1][j + 1] == a_symbol and string_board[i - 2][j + 2] == a_symbol:
+                        if string_board[i - 3][j + 3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i - 1][j + 1] == b_symbol and string_board[i - 2][j + 2] == b_symbol:
+                        if string_board[i - 3][j + 3] == b_symbol:
+                            # cpu_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( linear )
+                    if string_board[i][j+1] == a_symbol and string_board[i][j+2] == a_symbol:
+                        if string_board[i][j+3] == a_symbol:
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i][j + 1] == b_symbol and string_board[i][j + 2] == b_symbol:
+                        if string_board[i][j + 3] == b_symbol:
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( vert )
+                    if string_board[i-1][j] == a_symbol and string_board[i-2][j] == a_symbol:
+                        if string_board[i-3][j] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!! \n')
+                            return True
+                    if string_board[i-1][j] == b_symbol and string_board[i-2][j] == b_symbol:
+                        if string_board[i-3][j] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!! \n')
+                            return True
+                    # print('\n Edge Condition \n')
+                elif i <= 3 and j < 3:
+                    # ( check diagonals )
+                    if string_board[i+1][j+1] == a_symbol and string_board[i+2][j+2] == a_symbol:
+                        if string_board[i+3][j+3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i+1][j+1] == b_symbol and string_board[i+2][j+2] == b_symbol:
+                        if string_board[i+3][j+3] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( linear )
+                    if string_board[i][j+1] == a_symbol and string_board[i][j+2] == a_symbol:
+                        if string_board[i][j+3] == a_symbol:
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i][j + 1] == b_symbol and string_board[i][j + 2] == b_symbol:
+                        if string_board[i][j + 3] == b_symbol:
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( vert )
+                    if string_board[i+1][j] == a_symbol and string_board[i+2][j] == a_symbol:
+                        if string_board[i+3][j] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!! \n')
+                            return True
+                    if string_board[i+1][j] == b_symbol and string_board[i+2][j] == b_symbol:
+                        if string_board[i+3][j] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!! \n')
+                            return True
+                    # print('\n Edge Condition \n')
+                elif i >= 3 and j > 3:
+                    # ( check diagonals )
+                    if string_board[i-1][j-1] == a_symbol and string_board[i-2][j-2] == a_symbol:
+                        if string_board[i-3][j-3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i-1][j-1] == b_symbol and string_board[i-2][j-2] == b_symbol:
+                        if string_board[i-3][j-3] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( linear )
+                    if string_board[i][j-1] == a_symbol and string_board[i][j-2] == a_symbol:
+                        if string_board[i][j-3] == a_symbol:
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i][j-1] == b_symbol and string_board[i][j-2] == b_symbol:
+                        if string_board[i][j-3] == b_symbol:
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( vert )
+                    if string_board[i-1][j] == a_symbol and string_board[i-2][j] == a_symbol:
+                        if string_board[i-3][j] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!! \n')
+                            return True
+                    if string_board[i-1][j] == b_symbol and string_board[i-2][j] == b_symbol:
+                        if string_board[i-3][j] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!! \n')
+                            return True
+                    # print('\n Edge Condition \n')
+                elif i <= 3 < j:
+                    # ( check diagonals )
+                    if string_board[i+1][j-1] == a_symbol and string_board[i+2][j-2] == a_symbol:
+                        if string_board[i+3][j-3] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i+1][j-1] == b_symbol and string_board[i+2][j-2] == b_symbol:
+                        if string_board[i+3][j-3] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( linear )
+                    if string_board[i][j-1] == a_symbol and string_board[i][j-2] == a_symbol:
+                        if string_board[i][j-3] == a_symbol:
+                            print('\n(Player): Connect 4 !!!\n')
+                            return True
+                    if string_board[i][j-1] == b_symbol and string_board[i][j-2] == b_symbol:
+                        if string_board[i][j-3] == b_symbol:
+                            print('\n(CPU): Connect 4 !!!\n')
+                            return True
+                    # ( vert )
+                    if string_board[i+1][j] == a_symbol and string_board[i+2][j] == a_symbol:
+                        if string_board[i+3][j] == a_symbol:
+                            # player_connects += 3
+                            print('\n(Player): Connect 4 !!!! \n')
+                            return True
+                    if string_board[i+1][j] == b_symbol and string_board[i+2][j] == b_symbol:
+                        if string_board[i+3][j] == b_symbol:
+                            # player_connects += 3
+                            print('\n(CPU): Connect 4 !!!! \n')
+                            return True
+    return False
 
 print('=================================================' * 2)
 print('\nWelcome To Connect-4')
@@ -143,19 +345,11 @@ elif singleplayer:
 
 if player1_f:
     row_counter = 5
-    while row_counter < 6:
-        if row_counter == 6:
+    while not game_over:
+        if fill_count == 43:
             break
-
-        # ( Row Check )
-        fill_count = 0
-        for i in range(len(board)):
-            if fill_count == len(board):
-                print('row: ' + str(i) + ' full')
-                row_counter -= 1
-            if i == 1:
-                fill_count += 1
-
+        if game_over:
+            break
         # ( Player 1 Input )
         player_input = input('\nPlayer 1 please enter location:\t')
         if board[row_counter][int(player_input)] == 1:
@@ -167,11 +361,11 @@ if player1_f:
         else:
             board[row_counter][int(player_input)] = 1
             string_board[row_counter][int(player_input)] = player1_symbol
+        fill_count += 1
 
         # ( Update && Display Board )
         display_board()
-        board_check(player1_symbol, cpu_symbol)
-        print('(row_count): ' + str(row_counter))
+        game_over = board_check(player1_symbol, cpu_symbol)
 
         # ( Generate CPU Input )
         cpu_input = random.randint(0, 6)
@@ -184,27 +378,19 @@ if player1_f:
         else:
             board[row_counter][cpu_input] = 1
             string_board[row_counter][cpu_input] = cpu_symbol
+        fill_count += 1
         print('\nCPU entered column:\t' + str(cpu_input))
 
         # ( Update && Display Board )
         display_board()
-        board_check(player1_symbol, cpu_symbol)
-        print('(row_count): ' + str(row_counter))
-
+        game_over = board_check(player1_symbol, cpu_symbol)
 if cpu_f:
     row_counter = 5
-    while row_counter < 6:
-        if row_counter == 6:
+    while not game_over:
+        if fill_count == 43:
             break
-
-        # ( Row Check )
-        fill_count = 0
-        for i in range(len(board)):
-            if fill_count == len(board):
-                print('row: ' + str(i) + ' full')
-                row_counter -= 1
-            if i == 1:
-                fill_count += 1
+        if game_over:
+            break
 
         # ( Generate CPU Input )
         cpu_input = random.randint(0, 6)
@@ -214,20 +400,15 @@ if cpu_f:
                 if board[i][cpu_input] == 0 and board[i+1][cpu_input] == 1:
                     board[i][cpu_input] = 1
                     string_board[i][cpu_input] = cpu_symbol
-            #     else:
-            #         # ( re-roll )
-            #         cpu_input = random.randint(0, 6)
-            # board[row_counter - 1][cpu_input] = 1
-            # string_board[row_counter - 1][cpu_input] = cpu_symbol
         else:
             board[row_counter][cpu_input] = 1
             string_board[row_counter][cpu_input] = cpu_symbol
-            print('\nCPU entered column:\t' + str(cpu_input))
+        fill_count += 1
+        print('\nCPU entered column:\t' + str(cpu_input))
 
         # ( Update && Display Board )
         display_board()
-        board_check(player1_symbol, cpu_symbol)
-        print('(row_count): ' + str(row_counter))
+        game_over = board_check(player1_symbol, cpu_symbol)
 
         # ( Player 1 Input )
         player_input = input('\nPlayer 1 please enter location:\t')
@@ -240,10 +421,11 @@ if cpu_f:
         else:
             board[row_counter][int(player_input)] = 1
             string_board[row_counter][int(player_input)] = player1_symbol
+        fill_count += 1
 
         # ( Update && Display Board )
         display_board()
-        board_check(player1_symbol, cpu_symbol)
-        print('(row_count): ' + str(row_counter))
+        game_over = board_check(player1_symbol, cpu_symbol)
 
+    print('\nGAME OVER !!!\n')
 print('=================================================' * 2)
